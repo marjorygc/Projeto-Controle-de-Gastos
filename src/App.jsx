@@ -1,22 +1,23 @@
-import { useState } from 'react'
-import Entrar from './Entrar'
 import './App.css'
+import Login from './pages/Login'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import Despesas from './pages/Despesas'
+import Estatisticas from './pages/Estatisticas'
 
-export default function Login(){
+
+export default function App(){
+
   return(
-    <div className="container">
-        <div className="login">
-    <h1>Login</h1>
-    <div className="inputs">
-      <input type="text" placeholder="Digite seu Email"/>
-      <input type="text" placeholder="Digite sua Senha"/>
-    </div>
-    <div className="links">
-    <p>Esqueci minha senha.</p>
-    <p>Cadastre-se</p>
-    </div>
-    <Entrar/>
-</div>
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route path = "/" element = {<Login/>}></Route>
+          <Route path = "/Home" element = {<Home/>}></Route>
+          <Route path = "/Despesas" element = {<Despesas/>}></Route>
+          <Route path = "/Estatisticas" element = {<Estatisticas/>}></Route>
+          </Routes>
+      </BrowserRouter>
     </div>
 )
   
