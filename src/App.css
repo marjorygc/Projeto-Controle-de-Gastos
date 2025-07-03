@@ -1,14 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-
+*{
+  margin: 0;
+}
 .container{
+  width: 100%;
+  height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 0;
   margin: 0;
-  font-family: "Montserrat", sans-serif;
 }
+.imagem img{
+  height: 90%;
+  object-fit: cover;
+  display: block;
+  
+}
+.imagem{
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 60%;
+  background-color:  rgb(90, 155, 253);
+}
+.loginblock{
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+}
 .login{
   background-color: rgb(228, 228, 228);
   display: flex;
@@ -21,7 +40,9 @@
   border-radius: 40px;
 }
 
+
 h1{
+  margin-top: 20px;
   font-size: 35px;
   color: rgb(80, 80, 80);
 }
@@ -68,4 +89,18 @@ p{
   margin-bottom: 30px;
   font-weight: bold;
   width: 30%;
+}
+@media (max-width: 1024px) {
+  .imagem {
+    width: 30%; /* em telas médias, imagem ocupa menos espaço */
+  }
+}
+
+@media (max-width: 768px) {
+  .imagem {
+    display: none; /* esconde a imagem em telas pequenas */
+  }
+  .loginblock {
+    flex: 1 1 100%; /* login ocupa a tela toda */
+  }
 }

@@ -1,0 +1,29 @@
+#menu{
+    display: flex;
+    justify-content: space-between;
+    width: 100vw;
+    height: 100%;
+    background-color: rgb(90, 155, 253);
+    padding: 10px;
+    display: flex;
+    gap: 20px;    
+}
+a{
+    text-decoration: none;
+    color: white;
+}
+.left{
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+#criar{
+
+  background: linear-gradient(70deg,rgb(17, 60, 124) 0%,rgb(90, 155, 253) 150%);
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 15px;
+    font-weight: bold;
+}
