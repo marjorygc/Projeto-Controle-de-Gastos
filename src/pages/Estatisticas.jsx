@@ -1,5 +1,5 @@
-import Menu from "./Menu"
-import FinanceChart from "./Grafico"
+import Menu from "../componentes/Menu"
+import FinanceChart from "../componentes/Grafico"
 
 export default function Estatisticas(){
     return(

@@ -1,6 +1,6 @@
-import Menu from "./Menu"
-import Tabela from "./Tabela"
-import "./Home.css"
+import Menu from "../componentes/Menu"
+import Tabela from "../componentes/Tabela"
+import "./styles/Home.css"
 export default function Home(){
     return(
         <div className="home">

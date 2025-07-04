@@ -1,0 +1,30 @@
+.despesas{
+   
+    width: 90vw;
+    height: 60vh;
+    margin: 20px;
+    background-color: rgb(123, 167, 218);
+    border-radius: 20px;
+}
+.topo{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    align-items: center;
+}
+
+#plus{
+    background-color: #505050;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 13px;
+    margin-bottom: 30px;
+    height: 24px;
+    width: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: large;
+}

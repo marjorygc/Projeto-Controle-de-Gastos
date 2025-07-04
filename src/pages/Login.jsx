@@ -1,4 +1,4 @@
-import Entrar from '../Entrar'
+import Entrar from '../componentes/Entrar'
 import '../App.css'
 import imagem from '../assets/telalogin.png'
 
