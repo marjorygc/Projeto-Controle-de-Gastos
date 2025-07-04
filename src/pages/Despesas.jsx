@@ -1,6 +1,8 @@
 import Menu from "../componentes/Menu"
 import "./styles/Despesas.css"
 import Filtrar from '../componentes/Filtrar'
+import TabDespesas from "../componentes/TabDespesas"
+
 export default function Despesas(){
     return(
         <div>
@@ -14,7 +16,9 @@ export default function Despesas(){
                         <button id="plus">+</button>
                      </div>
                 </div>
+                <div className="tab_despesas">
 
+                </div>
                 
                
             </div>
