@@ -11,16 +11,14 @@ export default function Despesas(){
             <div className="despesas">
                 <div className="topo">
                     <Filtrar/> 
-                     <h1>Despesas</h1>
-                     <div className="btdespesas">
+                    <h1>Despesas</h1>
+                    <div className="btdespesas">
                         <button id="plus">+</button>
-                     </div>
+                    </div>
                 </div>
-                <div className="tab_despesas">
-
+                <div>
+                    <TabDespesas/>
                 </div>
-                
-               
             </div>
         </div>
     )
