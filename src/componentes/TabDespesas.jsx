@@ -70,7 +70,7 @@ export default function TabDespesas({ filtroTipo }) {
     : dados;
 
   return (
-    <div className="tab_conteiner">
+    <div>
         <table className="tab_despesas">
       <thead>
         <tr>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import {
   Table,
   TableBody,
@@ -66,23 +66,24 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
   const calcularTotais = (lista) => {
     let totalReceitas = 0;
     let totalDespesas = 0;
+    
+
 
     lista.forEach((item) => {
       const valor = parseFloat(item.valor);
       if (item.tipo === "Receita") totalReceitas += valor;
       else totalDespesas += valor;
     });
+    let saldoFinal= totalReceitas - totalDespesas;
+   const novosTotais = {
+    totalReceitas,
+    totalDespesas,
+    saldoFinal,
+  };
 
-    const saldoFinal = totalReceitas - totalDespesas;
-
-    setTotais({
-      totalReceitas,
-      totalDespesas,
-      saldoFinal,
-    });
-
+  setTotais(novosTotais);
     if (onSaldoChange) {
-      onSaldoChange(saldoFinal);
+      onSaldoChange(novosTotais);
     }
   };
 
@@ -202,9 +203,9 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
 
       {/* TOTAIS */}
       <div className="totais">
-        <p>💵 Total Receitas: <strong style={{ color: "green" }}>R$ {totais.totalReceitas.toFixed(2)}</strong></p>
-        <p>💸 Total Despesas: <strong style={{ color: "red" }}>R$ {totais.totalDespesas.toFixed(2)}</strong></p>
-        <p>🧮 Saldo Final: <strong style={{ color: totais.saldoFinal >= 0 ? "green" : "red" }}>R$ {totais.saldoFinal.toFixed(2)}</strong></p>
+        <p> Total Receitas: <strong style={{ color: "green" }}>R$ {totais.totalReceitas.toFixed(2)}</strong></p>
+        <p> Total Despesas: <strong style={{ color: "red" }}>R$ {totais.totalDespesas.toFixed(2)}</strong></p>
+        
       </div>
 
       {/* MODAL */}

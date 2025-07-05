@@ -1,51 +1,43 @@
-import React from "react";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
+  PieChart,
+  Pie,
+  Cell,
   Legend,
+  Tooltip,
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  { month: "Jan", receitas: 4000, despesas: 2400 },
-  { month: "Feb", receitas: 3000, despesas: 1398 },
-  { month: "Mar", receitas: 5000, despesas: 3800 },
-  { month: "Apr", receitas: 4000, despesas: 2800 },
-  { month: "May", receitas: 6000, despesas: 3908 },
-  { month: "Jun", receitas: 7000, despesas: 4300 },
-];
+export default function GraficoPizza({ totais }) {
+  const data = [
+    { name: "Receitas", value: totais.totalReceitas },
+    { name: "Despesas", value: totais.totalDespesas },
+  ];
 
-export default function FinanceChart() {
+  const cores = ["#4caf50", "#f44336"]; // Verde para receitas, vermelho para despesas
+
   return (
     <div style={{ width: "100%", height: 400 }}>
-      <h2 style={{ textAlign: "center" }}>Receitas vs Despesas</h2>
       <ResponsiveContainer>
-        <LineChart
-          data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
-          <YAxis />
+        <PieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            label={({ name, percent }) =>
+              `${name}: ${(percent * 100).toFixed(0)}%`
+            }
+            outerRadius={120}
+            fill="#8884d8"
+            dataKey="value"
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={cores[index % cores.length]} />
+            ))}
+          </Pie>
           <Tooltip />
           <Legend />
-          <Line
-            type="monotone"
-            dataKey="receitas"
-            stroke="#4caf50"
-            strokeWidth={3}
-          />
-          <Line
-            type="monotone"
-            dataKey="despesas"
-            stroke="#f44336"
-            strokeWidth={3}
-          />
-        </LineChart>
+        </PieChart>
       </ResponsiveContainer>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Menu from "../componentes/Menu";
 import "./styles/Despesas.css";
 import Filtrar from "../componentes/Filtrar";

@@ -26,3 +26,6 @@
 .scrollable-table::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+p{
+  font-size: 15px;
+}
