@@ -1,358 +1,270 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import { visuallyHidden } from '@mui/utils';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  MenuItem,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import "./styles/Tabela.css"; // estilos
 
-function createData(id, descricao, valor, data, categoria, tipo) {
-  return {
-    id,
-    descricao,
-    valor,
-    data,
-    categoria,
-    tipo
-  };
-}
+const Tabela = forwardRef(({ onSaldoChange }, ref) => {
+  const [dados, setDados] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [form, setForm] = useState({
+    id: null,
+    tipo: "Receita",
+    nome: "",
+    valor: "",
+    categoria: "",
+    data: "",
+  });
 
-const rows = [
-  createData(1, 'Cupcake', 305, 3.7, 67, 4.3),
-  createData(2, 'Donut', 452, 25.0, 51, 4.9),
-  createData(3, 'Eclair', 262, 16.0, 24, 6.0),
-  createData(4, 'Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData(5, 'Gingerbread', 356, 16.0, 49, 3.9),
+  const [totais, setTotais] = useState({
+    totalReceitas: 0,
+    totalDespesas: 0,
+    saldoFinal: 0,
+  });
 
-];
+  // Carregar dados do LocalStorage
+  useEffect(() => {
+    const dadosSalvos = JSON.parse(localStorage.getItem("lancamentos")) || [];
+    setDados(dadosSalvos);
+    calcularTotais(dadosSalvos);
+  }, []);
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
+  // Expor método para abrir modal com botão CRIAR
+  useImperativeHandle(ref, () => ({
+    abrirModal: () => {
+      setForm({
+        id: null,
+        tipo: "Receita",
+        nome: "",
+        valor: "",
+        categoria: "",
+        data: "",
+      });
+      setModalOpen(true);
+    },
+  }));
 
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+  // Calcular totais e saldo
+  const calcularTotais = (lista) => {
+    let totalReceitas = 0;
+    let totalDespesas = 0;
 
-const headCells = [
-  {
-    id: 'descricao',
-    numeric: false,
-    disablePadding: true,
-    label: 'Descrição',
-  },
-  {
-    id: 'valor',
-    numeric: true,
-    disablePadding: false,
-    label: 'Valor',
-  },
-  {
-    id: 'data',
-    numeric: false,
-    disablePadding: false,
-    label: 'Data',
-  },
-  {
-    id: 'categoria',
-    numeric: true,
-    disablePadding: false,
-    label: 'Categoria',
-  },
-  {
-    id: 'tipo',
-    numeric: true,
-    disablePadding: false,
-    label: 'Tipo',
-  },
-];
+    lista.forEach((item) => {
+      const valor = parseFloat(item.valor);
+      if (item.tipo === "Receita") totalReceitas += valor;
+      else totalDespesas += valor;
+    });
 
-function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
+    const saldoFinal = totalReceitas - totalDespesas;
+
+    setTotais({
+      totalReceitas,
+      totalDespesas,
+      saldoFinal,
+    });
+
+    if (onSaldoChange) {
+      onSaldoChange(saldoFinal);
+    }
   };
 
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
-function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
-  return (
-    <Toolbar
-      sx={[
-        {
-          pl: { sm: 2 },
-          pr: { xs: 1, sm: 1 },
-        },
-        numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        },
-      ]}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Nutrition
-        </Typography>
-      )}
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-}
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
-export default function EnhancedTable() {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('descricao');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
+  // Salvar no LocalStorage
+  const salvarLocalStorage = (lista) => {
+    localStorage.setItem("lancamentos", JSON.stringify(lista));
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
-      setSelected(newSelected);
+  // Adicionar ou editar
+  const handleSalvar = () => {
+    if (!form.nome || !form.valor || !form.data || !form.categoria) {
+      alert("Preencha todos os campos!");
       return;
     }
-    setSelected([]);
-  };
 
-  const handleClick = (event, id) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+    let novaLista;
+    if (form.id === null) {
+      // Adicionar
+      const novoItem = { ...form, id: Date.now() };
+      novaLista = [...dados, novoItem];
+    } else {
+      // Editar
+      novaLista = dados.map((item) =>
+        item.id === form.id ? form : item
       );
     }
-    setSelected(newSelected);
+
+    setDados(novaLista);
+    salvarLocalStorage(novaLista);
+    calcularTotais(novaLista);
+    setModalOpen(false);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  // Excluir
+  const handleExcluir = (id) => {
+    const novaLista = dados.filter((item) => item.id !== id);
+    setDados(novaLista);
+    salvarLocalStorage(novaLista);
+    calcularTotais(novaLista);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+  // Editar
+  const handleEditar = (item) => {
+    setForm(item);
+    setModalOpen(true);
   };
-
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const visibleRows = React.useMemo(
-    () =>
-      [...rows]
-        .sort(getComparator(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage],
-  );
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
+    <div className="tabela-container">
+      <div className="tabela-header">
+        <h2>Receitas e Despesas</h2>
+        <Tooltip title="Adicionar lançamento">
+          <IconButton
+            color="success"
+            onClick={() => {
+              setForm({
+                id: null,
+                tipo: "Receita",
+                nome: "",
+                valor: "",
+                categoria: "",
+                data: "",
+              });
+              setModalOpen(true);
+            }}
           >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = selected.includes(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
+            <AddIcon />
+          </IconButton>
+        </Tooltip>
+      </div>
 
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row.descricao}
-                    </TableCell>
-                    <TableCell align="right">{row.valor}</TableCell>
-                    <TableCell align="right">{row.data}</TableCell>
-                    <TableCell align="right">{row.categoria}</TableCell>
-                    <TableCell align="right">{row.tipo}</TableCell>
-                  </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
-    </Box>
+      {/* TABELA */}
+      <TableContainer component={Paper} className="scrollable-table">
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Tipo</TableCell>
+              <TableCell>Nome</TableCell>
+              <TableCell>Valor</TableCell>
+              <TableCell>Categoria</TableCell>
+              <TableCell>Data</TableCell>
+              <TableCell align="center">Ações</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {dados.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell>{item.tipo}</TableCell>
+                <TableCell>{item.nome}</TableCell>
+                <TableCell>R$ {parseFloat(item.valor).toFixed(2)}</TableCell>
+                <TableCell>{item.categoria}</TableCell>
+                <TableCell>{item.data}</TableCell>
+                <TableCell align="center">
+                  <Tooltip title="Editar">
+                    <IconButton onClick={() => handleEditar(item)} color="primary">
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Excluir">
+                    <IconButton onClick={() => handleExcluir(item.id)} color="error">
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+            {dados.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  Nenhum lançamento cadastrado
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {/* TOTAIS */}
+      <div className="totais">
+        <p>💵 Total Receitas: <strong style={{ color: "green" }}>R$ {totais.totalReceitas.toFixed(2)}</strong></p>
+        <p>💸 Total Despesas: <strong style={{ color: "red" }}>R$ {totais.totalDespesas.toFixed(2)}</strong></p>
+        <p>🧮 Saldo Final: <strong style={{ color: totais.saldoFinal >= 0 ? "green" : "red" }}>R$ {totais.saldoFinal.toFixed(2)}</strong></p>
+      </div>
+
+      {/* MODAL */}
+      <Dialog open={modalOpen} onClose={() => setModalOpen(false)}>
+        <DialogTitle>
+          {form.id === null ? "Adicionar Lançamento" : "Editar Lançamento"}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            select
+            label="Tipo"
+            fullWidth
+            margin="dense"
+            value={form.tipo}
+            onChange={(e) => setForm({ ...form, tipo: e.target.value })}
+          >
+            <MenuItem value="Receita">Receita</MenuItem>
+            <MenuItem value="Despesa">Despesa</MenuItem>
+          </TextField>
+          <TextField
+            label="Nome"
+            fullWidth
+            margin="dense"
+            value={form.nome}
+            onChange={(e) => setForm({ ...form, nome: e.target.value })}
+          />
+          <TextField
+            label="Valor"
+            type="number"
+            fullWidth
+            margin="dense"
+            value={form.valor}
+            onChange={(e) => setForm({ ...form, valor: e.target.value })}
+          />
+          <TextField
+            label="Categoria"
+            fullWidth
+            margin="dense"
+            value={form.categoria}
+            onChange={(e) => setForm({ ...form, categoria: e.target.value })}
+          />
+          <TextField
+            label="Data"
+            type="date"
+            fullWidth
+            margin="dense"
+            InputLabelProps={{ shrink: true }}
+            value={form.data}
+            onChange={(e) => setForm({ ...form, data: e.target.value })}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setModalOpen(false)}>Cancelar</Button>
+          <Button variant="contained" onClick={handleSalvar}>
+            Salvar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
-}
+});
+
+export default Tabela;

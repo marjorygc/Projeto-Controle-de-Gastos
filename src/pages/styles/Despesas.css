@@ -1,12 +1,37 @@
-
-
 .despesas{
-    width: 90vw;
-    height: 60vh;
-    margin: 20px;
+    width: 90%;
+    height: 80vh;
     background-color: rgb(123, 167, 218);
     border-radius: 20px;
+    margin: 0 auto; /* centraliza horizontalmente */
+    margin-top: 20px; 
+    overflow-y: auto; /* ativa rolagem dentro da div */
 }
+/* Personaliza a barra de rolagem (para navegadores baseados em Webkit) */
+.despesas::-webkit-scrollbar {
+  width: 8px; /* largura da barra vertical */
+  height: 8px; /* altura da barra horizontal (se existir) */
+}
+
+.despesas::-webkit-scrollbar-track {
+  background: #cfd8dc; /* cor do fundo da barra */
+  border-radius: 10px; /* bordas arredondadas */
+}
+
+.despesas::-webkit-scrollbar-thumb {
+  background: #607d8b; /* cor do “thumb” (a parte que você arrasta) */
+  border-radius: 10px;
+}
+
+.despesas::-webkit-scrollbar-thumb:hover {
+  background: #455a64; /* cor quando o mouse passa em cima */
+}
+
+.despesas {
+  scrollbar-width: thin; /* largura fina */
+  scrollbar-color: #607d8b #cfd8dc; /* thumb e track */
+}
+
 .topo{
     display: flex;
     justify-content: space-between;
