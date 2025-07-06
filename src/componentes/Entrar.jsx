@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
 
 export default function Entrar() {
-  const navigate = useNavigate(); 
-
+  const navigate = useNavigate();
+  
   function handleLogin() {
-    // Aqui você pode validar dados se quiser antes de redirecionar
-    navigate('/Home'); 
+    if (Verificacao(email, senha)) {
+      navigate("../pages/Home");
+    } else {
+      alert("Credenciais inválidas");
+    }
   }
 
   return (
