@@ -1,9 +1,9 @@
 
 import { useState, useRef } from "react";
-import Menu from "../componentes/Menu";
-import "./styles/Despesas.css";
-import Filtrar from "../componentes/Filtrar"; // Seu componente Filtrar
-import TabDespesas from "../componentes/TabDespesas"; // Seu componente TabDespesas
+import Menu from "../componentes/Menu";// componente menu
+import "./styles/Despesas.css";// css
+import Filtrar from "../componentes/Filtrar"; // componente Filtrar
+import TabDespesas from "../componentes/TabDespesas"; // componente TabDespesas
 import {
     IconButton,
     Tooltip,
@@ -14,21 +14,21 @@ import {
     Button,
     TextField,
     MenuItem,
-} from "@mui/material";
+} from "@mui/material";// material mui
 import AddIcon from "@mui/icons-material/Add";
 
 export default function Despesas() {
-    const [filtroTipo, setFiltroTipo] = useState("");
-    const [abrirForm, setAbrirForm] = useState(false);
+    const [filtroTipo, setFiltroTipo] = useState("");// guarda o tipo de despesa a ser filtrado
+    const [abrirForm, setAbrirForm] = useState(false);// controla se o modal de "nova despesa" está aberto ou fechado.
     const [novaDespesa, setNovaDespesa] = useState({
         nome: "",
         tipo: "Fixa",
         categoria: "",
-    });
+    });// objeto com os dados da nova despesa que está sendo criada.
 
     const tabDespesasRef = useRef();
 
-    // Esta função será passada para o Menu
+    // função para abrir modal de adicionar
     const handleAbrirModal = () => setAbrirForm(true);
 
     const handleFecharModal = () => {
@@ -59,7 +59,7 @@ export default function Despesas() {
     return (
         <div>
             {/* Passa a função para o Menu para abrir o modal */}
-            <Menu abrirModal={handleAbrirModal} />
+            <Menu  />
 
             <div className="despesas">
                 <div className="topo">
