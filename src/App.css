@@ -65,13 +65,8 @@ input:focus{
   border: none;
 }
 
-.links{
-  color: gray;
-  display: flex;
-  flex-direction: column;
-  align-self: flex-start;
-  padding: 5px;
-  gap: 2px;
+.links p{
+  color: rgb(0, 0, 0);
   margin-left: 20px;
 }
 
@@ -81,6 +76,8 @@ p{
 }
 
 .entrar{
+  display: flex;
+  justify-content: center;
   background-color: rgb(90, 155, 253);
   color: white;
   padding: 15px;
@@ -89,10 +86,11 @@ p{
   margin-bottom: 30px;
   font-weight: bold;
   width: 30%;
+  
 }
 @media (max-width: 1024px) {
-  .imagem {
-    width: 30%; /* em telas médias, imagem ocupa menos espaço */
+  .imagem img {
+    height: 80%; /* em telas médias, imagem ocupa menos espaço */
   }
 }
 

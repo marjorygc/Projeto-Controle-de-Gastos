@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles/Cadastro.css";
-
+import Logo from "../assets/Logobranca .png"
 export default function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -56,8 +56,10 @@ export default function Cadastro() {
   }
 
   return (
-    <div className="container">
+    <div className="container1">
+      <img src={Logo} alt="" />
       <div className="cadastroblock">
+        
         <div className="cadastro">
           <h1>Cadastro</h1>
           <div className="inputs">
@@ -76,7 +78,7 @@ export default function Cadastro() {
           </div>
           <div className="links">
             <p
-              style={{ cursor: "pointer", color: "blue" }}
+              style={{ cursor: "pointer", color: "black" }}
               onClick={() => navigate("/login")}
             >
               Voltar ao login

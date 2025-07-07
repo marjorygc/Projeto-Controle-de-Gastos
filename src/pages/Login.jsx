@@ -45,8 +45,8 @@ export default function Login() {
             />
           </div>
           <div className="links">
-            <p>Esqueci minha senha.</p>
-            <Link to="/cadastro">Cadastrar-se</Link>
+            
+            <Link to="/cadastro"><p>Cadastrar-se</p></Link>
           </div>
           <button className="entrar" onClick={handleEntrar}>
             Entrar
