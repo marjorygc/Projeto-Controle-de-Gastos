@@ -1,6 +1,7 @@
-import  { useEffect, useState } from "react";
+// src/pages/Estatisticas.js
+import { useEffect, useState } from "react";
 import Menu from "../componentes/Menu";
-import GraficoBarras from "../componentes/Grafico";
+import GraficoBarras from "../componentes/Grafico"; // Certifique-se de que este componente exista
 
 export default function Estatisticas() {
   const [totais, setTotais] = useState({
@@ -11,7 +12,7 @@ export default function Estatisticas() {
 
   // Buscar os lançamentos do localStorage e calcular os totais
   useEffect(() => {
-    const dadosSalvos = JSON.parse(localStorage.getItem("lancamentos")) || [];
+    const dadosSalvos = JSON.parse(localStorage.getItem("lancamentos")) || []; // Sua chave para lançamentos gerais
 
     let totalReceitas = 0;
     let totalDespesas = 0;
@@ -36,6 +37,7 @@ export default function Estatisticas() {
 
   return (
     <div>
+      {/* Aqui, não passamos abrirModal, pois Estatísticas não tem um modal de criação direto */}
       <Menu />
       <h2 style={{ textAlign: "center", marginTop: "20px" }}>Estatísticas</h2>
       {/* Renderiza o gráfico só se houver dados */}

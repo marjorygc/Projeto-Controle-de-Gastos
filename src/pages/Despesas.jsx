@@ -1,128 +1,124 @@
-import { useState } from "react";
+// src/pages/Despesas.js
+import { useState, useRef } from "react";
 import Menu from "../componentes/Menu";
 import "./styles/Despesas.css";
-import Filtrar from "../componentes/Filtrar";
-import TabDespesas from "../componentes/TabDespesas";
+import Filtrar from "../componentes/Filtrar"; // Seu componente Filtrar
+import TabDespesas from "../componentes/TabDespesas"; // Seu componente TabDespesas
 import {
-  IconButton,
-  Tooltip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
-  MenuItem,
+    IconButton,
+    Tooltip,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    TextField,
+    MenuItem,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 export default function Despesas() {
-  const [filtroTipo, setFiltroTipo] = useState(""); // filtro vazio = todas
-  const [abrirForm, setAbrirForm] = useState(false);
-  const [novaDespesa, setNovaDespesa] = useState({
-    nome: "",
-    valor: "",
-    tipo: "Fixa",
-    categoria: "",
-  });
+    const [filtroTipo, setFiltroTipo] = useState("");
+    const [abrirForm, setAbrirForm] = useState(false);
+    const [novaDespesa, setNovaDespesa] = useState({
+        nome: "",
+        tipo: "Fixa",
+        categoria: "",
+    });
 
-  const handleAbrir = () => setAbrirForm(true);
+    const tabDespesasRef = useRef();
 
-  const handleFechar = () => {
-    setAbrirForm(false);
-    setNovaDespesa({ nome: "", valor: "", tipo: "Fixa", categoria: "" });
-  };
+    // Esta função será passada para o Menu
+    const handleAbrirModal = () => setAbrirForm(true);
 
-  const handleSalvar = () => {
-    if (
-      novaDespesa.nome &&
-      novaDespesa.valor &&
-      novaDespesa.tipo &&
-      novaDespesa.categoria
-    ) {
-      const evento = new CustomEvent("nova-despesa", { detail: novaDespesa });
-      window.dispatchEvent(evento);
-      handleFechar();
-    } else {
-      alert("Preencha todos os campos!");
-    }
-  };
+    const handleFecharModal = () => {
+        setAbrirForm(false);
+        setNovaDespesa({ nome: "", tipo: "Fixa", categoria: "" });
+    };
 
-  return (
-    <div>
-      <Menu />
+    const handleNovaDespesaChange = (e) => {
+        const { name, value } = e.target;
+        setNovaDespesa({ ...novaDespesa, [name]: value });
+    };
 
-      <div className="despesas">
-        <div className="topo">
-          <Filtrar filtroTipo={filtroTipo} setFiltroTipo={setFiltroTipo} />
-          <h1>Despesas</h1>
-          <div className="btdespesas">
-            <Tooltip title="Adicionar despesa">
-              <IconButton color="success" onClick={handleAbrir}>
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
-          </div>
-        </div>
+    const handleSalvarDespesa = () => {
+        if (!novaDespesa.nome || !novaDespesa.tipo || !novaDespesa.categoria) {
+            alert("Por favor, preencha todos os campos!");
+            return;
+        }
 
+        if (tabDespesasRef.current && tabDespesasRef.current.adicionarDespesa) {
+            tabDespesasRef.current.adicionarDespesa(novaDespesa);
+        } else {
+            console.error("TabDespesas: Método 'adicionarDespesa' não encontrado na ref.");
+        }
+
+        handleFecharModal();
+    };
+
+    return (
         <div>
-          <TabDespesas filtroTipo={filtroTipo} />
-        </div>
-      </div>
+            {/* Passa a função para o Menu para abrir o modal */}
+            <Menu abrirModal={handleAbrirModal} />
 
-      {/* Modal para adicionar despesa */}
-      <Dialog open={abrirForm} onClose={handleFechar}>
-        <DialogTitle>Nova Despesa</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label="Nome"
-            fullWidth
-            value={novaDespesa.nome}
-            onChange={(e) =>
-              setNovaDespesa({ ...novaDespesa, nome: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Valor"
-            type="number"
-            fullWidth
-            value={novaDespesa.valor}
-            onChange={(e) =>
-              setNovaDespesa({ ...novaDespesa, valor: e.target.value })
-            }
-          />
-          <TextField
-            select
-            margin="dense"
-            label="Tipo"
-            fullWidth
-            value={novaDespesa.tipo}
-            onChange={(e) =>
-              setNovaDespesa({ ...novaDespesa, tipo: e.target.value })
-            }
-          >
-            <MenuItem value="Fixa">Fixa</MenuItem>
-            <MenuItem value="Variável">Variável</MenuItem>
-          </TextField>
-          <TextField
-            margin="dense"
-            label="Categoria"
-            fullWidth
-            value={novaDespesa.categoria}
-            onChange={(e) =>
-              setNovaDespesa({ ...novaDespesa, categoria: e.target.value })
-            }
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleFechar}>Cancelar</Button>
-          <Button onClick={handleSalvar} variant="contained" color="primary">
-            Salvar
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
+            <div className="despesas">
+                <div className="topo">
+                    <Filtrar filtroTipo={filtroTipo} setFiltroTipo={setFiltroTipo} />
+                    <h1>Despesas</h1>
+                    <div className="btdespesas">
+                        <Tooltip title="Adicionar despesa">
+                            <IconButton color="success" onClick={handleAbrirModal}>
+                                <AddIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </div>
+                </div>
+
+                <div>
+                    <TabDespesas filtroTipo={filtroTipo} ref={tabDespesasRef} />
+                </div>
+            </div>
+
+            {/* Modal para adicionar despesa */}
+            <Dialog open={abrirForm} onClose={handleFecharModal}>
+                <DialogTitle>Nova Despesa</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        margin="dense"
+                        label="Nome"
+                        fullWidth
+                        name="nome"
+                        value={novaDespesa.nome}
+                        onChange={handleNovaDespesaChange}
+                    />
+                    <TextField
+                        select
+                        margin="dense"
+                        label="Tipo"
+                        fullWidth
+                        name="tipo"
+                        value={novaDespesa.tipo}
+                        onChange={handleNovaDespesaChange}
+                    >
+                        <MenuItem value="Fixa">Fixa</MenuItem>
+                        <MenuItem value="Variável">Variável</MenuItem>
+                    </TextField>
+                    <TextField
+                        margin="dense"
+                        label="Categoria"
+                        fullWidth
+                        name="categoria"
+                        value={novaDespesa.categoria}
+                        onChange={handleNovaDespesaChange}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleFecharModal}>Cancelar</Button>
+                    <Button onClick={handleSalvarDespesa} variant="contained" color="primary">
+                        Salvar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
 }
