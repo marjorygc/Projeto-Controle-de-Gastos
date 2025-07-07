@@ -1,4 +1,4 @@
-// src/pages/Despesas.js
+
 import { useState, useRef } from "react";
 import Menu from "../componentes/Menu";
 import "./styles/Despesas.css";

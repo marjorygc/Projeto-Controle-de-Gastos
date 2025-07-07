@@ -1,4 +1,4 @@
-// src/componentes/Menu.js
+
 import "./styles/Menu.css";
 import Logobranca from "../assets/Logobranca .png";
 import { useState } from "react"; // Importar useState

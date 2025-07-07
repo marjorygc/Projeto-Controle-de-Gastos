@@ -1,4 +1,4 @@
-// src/pages/Home.js
+
 import { useState, useRef } from "react";
 import Menu from "../componentes/Menu";
 import Tabela from "../componentes/Tabela"; // Seu componente Tabela de Receitas/Despesas

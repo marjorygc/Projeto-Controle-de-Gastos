@@ -1,4 +1,4 @@
-// src/pages/Estatisticas.js
+
 import { useEffect, useState } from "react";
 import Menu from "../componentes/Menu";
 import GraficoBarras from "../componentes/Grafico"; // Certifique-se de que este componente exista

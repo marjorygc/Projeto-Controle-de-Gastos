@@ -1,4 +1,4 @@
-// src/components/TabDespesas.js
+
 import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import "./styles/TabDespesas.css";
 import Remover from "./Remover";
