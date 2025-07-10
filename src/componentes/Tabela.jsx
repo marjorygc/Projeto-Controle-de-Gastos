@@ -20,6 +20,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import FiltrarPorPeriodo from "./FiltrarPorPeriodo";
 import "./styles/Tabela.css"; // estilos
 
 const Tabela = forwardRef(({ onSaldoChange }, ref) => {
@@ -40,12 +41,26 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
     saldoFinal: 0,
   });
 
-  // Carregar dados do LocalStorage
+  const [filtroPeriodo, setFiltroPeriodo] = useState(["", ""]);
+
+  // Filtrar os dados pelo período selecionado
+  const dadosFiltrados = dados.filter((item) => {
+    const dataItem = new Date(item.data);
+    const inicio = filtroPeriodo[0] ? new Date(filtroPeriodo[0]) : null;
+    const fim = filtroPeriodo[1] ? new Date(filtroPeriodo[1]) : null;
+    return (!inicio || dataItem >= inicio) && (!fim || dataItem <= fim);
+  });
+
+  // Carregar dados do LocalStorage ao montar o componente
   useEffect(() => {
     const dadosSalvos = JSON.parse(localStorage.getItem("lancamentos")) || [];
     setDados(dadosSalvos);
-    calcularTotais(dadosSalvos);
   }, []);
+
+  // Atualizar totais sempre que dados ou filtro mudarem (usar dadosFiltrados)
+  useEffect(() => {
+    calcularTotais(dadosFiltrados);
+  }, [dadosFiltrados]);
 
   // Expor método para abrir modal com botão CRIAR
   useImperativeHandle(ref, () => ({
@@ -62,26 +77,25 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
     },
   }));
 
-  // Calcular totais e saldo
+  // Calcular totais e saldo baseado na lista passada (dados filtrados)
   const calcularTotais = (lista) => {
     let totalReceitas = 0;
     let totalDespesas = 0;
-    
-
 
     lista.forEach((item) => {
       const valor = parseFloat(item.valor);
       if (item.tipo === "Receita") totalReceitas += valor;
       else totalDespesas += valor;
     });
-    let saldoFinal= totalReceitas - totalDespesas;
-   const novosTotais = {
-    totalReceitas,
-    totalDespesas,
-    saldoFinal,
-  };
 
-  setTotais(novosTotais);
+    const saldoFinal = totalReceitas - totalDespesas;
+    const novosTotais = {
+      totalReceitas,
+      totalDespesas,
+      saldoFinal,
+    };
+
+    setTotais(novosTotais);
     if (onSaldoChange) {
       onSaldoChange(novosTotais);
     }
@@ -92,7 +106,7 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
     localStorage.setItem("lancamentos", JSON.stringify(lista));
   };
 
-  // Adicionar ou editar
+  // Adicionar ou editar lançamento
   const handleSalvar = () => {
     if (!form.nome || !form.valor || !form.data || !form.categoria) {
       alert("Preencha todos os campos!");
@@ -113,19 +127,17 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
 
     setDados(novaLista);
     salvarLocalStorage(novaLista);
-    calcularTotais(novaLista);
     setModalOpen(false);
   };
 
-  // Excluir
+  // Excluir lançamento
   const handleExcluir = (id) => {
     const novaLista = dados.filter((item) => item.id !== id);
     setDados(novaLista);
     salvarLocalStorage(novaLista);
-    calcularTotais(novaLista);
   };
 
-  // Editar
+  // Editar lançamento - abre modal preenchido
   const handleEditar = (item) => {
     setForm(item);
     setModalOpen(true);
@@ -135,6 +147,9 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
     <div className="tabela-container">
       <div className="tabela-header">
         <h2>Receitas e Despesas</h2>
+        {/* Passa a função para atualizar o filtro */}
+        <FiltrarPorPeriodo setFiltroPeriodo={setFiltroPeriodo} />
+
         <Tooltip title="Adicionar lançamento">
           <IconButton
             color="success"
@@ -155,7 +170,7 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
         </Tooltip>
       </div>
 
-      {/* TABELA */}
+      {/* TABELA - usa dadosFiltrados para mostrar só o que está no filtro */}
       <TableContainer component={Paper} className="scrollable-table">
         <Table>
           <TableHead>
@@ -169,7 +184,7 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dados.map((item) => (
+            {dadosFiltrados.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{item.tipo}</TableCell>
                 <TableCell>{item.nome}</TableCell>
@@ -190,7 +205,7 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
                 </TableCell>
               </TableRow>
             ))}
-            {dados.length === 0 && (
+            {dadosFiltrados.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   Nenhum lançamento cadastrado
@@ -203,9 +218,18 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
 
       {/* TOTAIS */}
       <div className="totais">
-        <p> Total Receitas: <strong style={{ color: "green" }}>R$ {totais.totalReceitas.toFixed(2)}</strong></p>
-        <p> Total Despesas: <strong style={{ color: "red" }}>R$ {totais.totalDespesas.toFixed(2)}</strong></p>
-        
+        <p>
+          Total Receitas:{" "}
+          <strong style={{ color: "green" }}>
+            R$ {totais.totalReceitas.toFixed(2)}
+          </strong>
+        </p>
+        <p>
+          Total Despesas:{" "}
+          <strong style={{ color: "red" }}>
+            R$ {totais.totalDespesas.toFixed(2)}
+          </strong>
+        </p>
       </div>
 
       {/* MODAL */}
