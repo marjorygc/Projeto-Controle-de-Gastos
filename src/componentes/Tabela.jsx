@@ -146,9 +146,11 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
   return (
     <div className="tabela-container">
       <div className="tabela-header">
+        
         <h2>Receitas e Despesas</h2>
         {/* Passa a função para atualizar o filtro */}
-        <FiltrarPorPeriodo setFiltroPeriodo={setFiltroPeriodo} />
+        <div >
+           <FiltrarPorPeriodo setFiltroPeriodo={setFiltroPeriodo} />
 
         <Tooltip title="Adicionar lançamento">
           <IconButton
@@ -168,6 +170,8 @@ const Tabela = forwardRef(({ onSaldoChange }, ref) => {
             <AddIcon />
           </IconButton>
         </Tooltip>
+        </div>
+       
       </div>
 
       {/* TABELA - usa dadosFiltrados para mostrar só o que está no filtro */}
