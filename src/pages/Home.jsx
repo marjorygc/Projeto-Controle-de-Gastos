@@ -17,7 +17,7 @@ export default function Home() {
       {/* Passa a função para abrir o modal da Tabela para o Menu */}
       <Menu abrirModal={() => tabelaRef.current.abrirModal()} />
       <div className="saldo">
-        <h2>Saldo</h2>
+        <p className="saldotil">Saldo</p>
         <p>
           R$ {saldo.saldoFinal.toFixed(2)}
         </p>

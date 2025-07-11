@@ -60,62 +60,14 @@ export default function Menu({ abrirModal }) {
 
     return (
         <div id="menu">
+            <img src={Logobranca} alt="logo" height={50} />
             <div className="left">
-                <img src={Logobranca} alt="logo" height={50} />
+                
                 <a href="/Home">Home</a>
                 <a href="/Despesas">Despesas</a>
                 <a href="/Estatisticas">Estatísticas</a>
             </div>
 
-            {/* O Botão CRIAR que abre o menu de seleção */}
-            <Box>
-                <Button
-                    id="criar-button"
-                    aria-controls={open ? 'criar-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
-                    onClick={handleClick}
-                    variant="contained"
-                    sx={{
-                      background: 'linear-gradient(70deg, rgb(17, 60, 124) 0%, rgb(90, 155, 253) 150%)',
-                      color: 'white', // A cor do texto
-                      padding: '15px',
-                      border: 'none', // 'none' para remover a borda padrão do Button se houver
-                      borderRadius: '15px',
-                      fontWeight: 'bold',
-                      // Adicionais para um bom comportamento do botão
-                      cursor: 'pointer',
-                      textTransform: 'uppercase', // Se o texto do botão for "CRIAR"
-                      whiteSpace: 'nowrap', // Impede que o texto quebre linha
-                      transition: 'background 0.3s ease, box-shadow 0.3s ease', // Transição para o hover
-                      '&:hover': { // Estilos para o estado hover
-                        background: 'linear-gradient(70deg, rgb(25, 75, 140) 0%, rgb(100, 165, 255) 150%)', // Gradiente ligeiramente alterado ou mais escuro
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Sombra no hover para efeito de elevação
-                      },
-                     
-                      minWidth: '100px' 
-                    }}
-                >
-                    CRIAR
-                </Button>
-                <MuiMenu // Menu do Material UI
-                    id="criar-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    MenuListProps={{
-                        'aria-labelledby': 'criar-button',
-                    }}
-                >
-                    {/* Opções do menu */}
-                    <MenuItem onClick={() => handleNavigate('home')}>
-                        Lançamento (Home)
-                    </MenuItem>
-                    <MenuItem onClick={() => handleNavigate('despesas')}>
-                        Despesa Fixa/Variável
-                    </MenuItem>
-                </MuiMenu>
-            </Box>
         </div>
     );
 }

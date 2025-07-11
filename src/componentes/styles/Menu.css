@@ -17,12 +17,3 @@ a{
     align-items: center;
 }
 
-#criar{
-
-     background: linear-gradient(70deg,rgb(17, 60, 124) 0%,rgb(90, 155, 253) 150%);
-    color: white;
-    padding: 15px;
-    border: none;
-    border-radius: 15px;
-    font-weight: bold;
-}
