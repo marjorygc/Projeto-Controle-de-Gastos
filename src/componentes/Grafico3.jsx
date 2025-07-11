@@ -9,7 +9,6 @@ const GraficoTipoDespesa = () => {
   useEffect(() => {
     const carregarDadosDoLocalStorage = () => {
       try {
-        // --- A LÓGICA DE BUSCA E PROCESSAMENTO DE DADOS PERMANECE INALTERADA ---
         const despesasSalvas = JSON.parse(localStorage.getItem("despesas")) || [];
 
         let countFixas = 0;

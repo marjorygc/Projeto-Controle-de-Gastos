@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Menu from "../componentes/Menu";
-import Grafico from "../componentes/Grafico"; // Assuming this is GraficoPizza
-import Grafico2 from "../componentes/Grafico2"; // Gráfico de Despesas por Categoria
-import Grafico3 from "../componentes/Grafico3"; // Gráfico de Tipo de Despesa
-import "./styles/Estatisticas.css"; // Import the centralized CSS
+import Grafico from "../componentes/Grafico"; // Grafico receitas e despesas
+import Grafico2 from "../componentes/Grafico2"; // Gráfico de despesas por categoria
+import Grafico3 from "../componentes/Grafico3"; // Gráfico de tipo de despesa
+import "./styles/Estatisticas.css"; 
 
 export default function Estatisticas() {
   const [totais, setTotais] = useState({
@@ -11,8 +11,6 @@ export default function Estatisticas() {
     totalDespesas: 0,
     saldoFinal: 0,
   });
-
-  // Fetch data from localStorage and calculate totals
   useEffect(() => {
     const dadosSalvos = JSON.parse(localStorage.getItem("lancamentos")) || [];
 
@@ -43,7 +41,6 @@ export default function Estatisticas() {
       <div className="estatisticas-container">
         <h2 style={{ textAlign: "center" }}>Estatísticas Financeiras</h2>
 
-        {/* Display totals in a card-like container */}
         <div className="totais-container1">
           <div className="totais-item1">
             <p>Receitas Totais:</p>
@@ -62,7 +59,7 @@ export default function Estatisticas() {
         </div>
 
         <div className="graficos-grid">
-          {/* First Graph: Revenue vs. Expenses */}
+          
           <div className="grafico-card">
             <h3>Receitas e Despesas</h3>
             {totais.totalReceitas !== 0 || totais.totalDespesas !== 0 ? (
@@ -72,13 +69,11 @@ export default function Estatisticas() {
             )}
           </div>
 
-          {/* Second Graph: Expenses by Category */}
           <div className="grafico-card">
             <h3>Despesas por Categoria</h3>
             <Grafico2 />
           </div>
 
-          {/* Third Graph: Fixed vs. Variable Expenses */}
           <div className="grafico-card">
             <h3>Fixas vs. Variáveis</h3>
             <Grafico3 />

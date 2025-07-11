@@ -7,7 +7,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function Grafico({ totais }) { // Renamed from GraficoPizza
+export default function Grafico({ totais }) { 
   const data = [
     { name: "Receitas", value: totais.totalReceitas },
     { name: "Despesas", value: totais.totalDespesas },
@@ -16,7 +16,7 @@ export default function Grafico({ totais }) { // Renamed from GraficoPizza
   const cores = ["#4caf50", "#f44336"]; // Verde para receitas, vermelho para despesas
 
   return (
-    // Remove the fixed height div here
+    
     <ResponsiveContainer width="100%" height="100%">
       <PieChart>
         <Pie
